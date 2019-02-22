@@ -6,18 +6,20 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://zjko.vip">
-  <title>Tag: Java | ZJKo</title>
+  <title>Redis源码分析-数据库 | ZJKo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="欢迎来到zjko的Blog">
-<meta property="og:type" content="website">
-<meta property="og:title" content="ZJKo">
-<meta property="og:url" content="http://zjko.vip/tags/Java/index.html">
+  <meta name="description" content="《Redis设计与实现》读书笔记，推荐去看作者原著 redisServerredis.h/redisServer 123456789struct redisServer&amp;#123;    // ...    // 一个保存着服务器中所有数据库的数组    redisDb *db;    // 服务器的数据库数量    int dbnum;    // ....&amp;#125;;">
+<meta name="keywords" content="C,Redis,读书笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Redis源码分析-数据库">
+<meta property="og:url" content="http://zjko.vip/2019/02/21/redis源码分析-数据库/index.html">
 <meta property="og:site_name" content="ZJKo">
-<meta property="og:description" content="欢迎来到zjko的Blog">
+<meta property="og:description" content="《Redis设计与实现》读书笔记，推荐去看作者原著 redisServerredis.h/redisServer 123456789struct redisServer&amp;#123;    // ...    // 一个保存着服务器中所有数据库的数组    redisDb *db;    // 服务器的数据库数量    int dbnum;    // ....&amp;#125;;">
 <meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2019-02-21T14:47:13.152Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ZJKo">
-<meta name="twitter:description" content="欢迎来到zjko的Blog">
+<meta name="twitter:title" content="Redis源码分析-数据库">
+<meta name="twitter:description" content="《Redis设计与实现》读书笔记，推荐去看作者原著 redisServerredis.h/redisServer 123456789struct redisServer&amp;#123;    // ...    // 一个保存着服务器中所有数据库的数组    redisDb *db;    // 服务器的数据库数量    int dbnum;    // ....&amp;#125;;">
   
     <link rel="alternative" href="/atom.xml" title="ZJKo" type="application/atom+xml">
   
@@ -141,36 +143,106 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-  
+            <article id="post-redis源码分析-数据库" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/09/27/安卓手机搭建开发环境/" class="archive-article-date">
-  	<time datetime="2017-09-27T12:27:57.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-27</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/09/27/安卓手机搭建开发环境/">安卓手机搭建开发环境</a>
+    <h1 class="article-title" itemprop="name">
+      Redis源码分析-数据库
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2019/02/21/redis源码分析-数据库/" class="archive-article-date">
+  	<time datetime="2019-02-21T12:19:14.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2019-02-21</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>《Redis设计与实现》读书笔记，<a href="http://redisbook.com/" target="_blank" rel="noopener">推荐去看作者原著</a></p>
+<h2 id="redisServer"><a href="#redisServer" class="headerlink" title="redisServer"></a>redisServer</h2><p>redis.h/redisServer</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">redisServer</span>&#123;</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="comment">// 一个保存着服务器中所有数据库的数组</span></span><br><span class="line">    redisDb *db;</span><br><span class="line">    <span class="comment">// 服务器的数据库数量</span></span><br><span class="line">    <span class="keyword">int</span> dbnum;</span><br><span class="line">    <span class="comment">// ....</span></span><br><span class="line"></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<a id="more"></a>
+<p>初始化时，程序会根据dbnum属性来决定创建的数据库数量。dbnum属性由服务器配置的database选项决定，默认为16。</p>
+<h2 id="redisClient"><a href="#redisClient" class="headerlink" title="redisClient"></a>redisClient</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">redisClient</span>&#123;</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="comment">// 记录客户端当前正在使用的数据库</span></span><br><span class="line">    redisDb *db;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>使用[select id]命令即可切换数据库。</p>
+<h2 id="redisDb"><a href="#redisDb" class="headerlink" title="redisDb"></a>redisDb</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">redisDb</span> &#123;</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="comment">// 数据库键空间，保存着数据库中所有的键值对</span></span><br><span class="line">    dict *dict;</span><br><span class="line">    <span class="comment">// 保存着数据库键的过期时间</span></span><br><span class="line">    dict *expires;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="键的增删改查"><a href="#键的增删改查" class="headerlink" title="键的增删改查"></a>键的增删改查</h2><pre><code>set data &quot;2013.12.1&quot; //修改或添加
+del book //删除
+get key  //获取
+hset book page 200 //设置键book的hash对象中的page键值为200
+</code></pre><h2 id="读写键空间的维护操作"><a href="#读写键空间的维护操作" class="headerlink" title="读写键空间的维护操作"></a>读写键空间的维护操作</h2><ul>
+<li>在操作一个键后，服务器会根据键是否存在来更新服务器的键空间命中次数和空间命中次数，这两个值可以在info stats命令的keyspace_hits属性和keyspace_misses属性中查看。</li>
+<li>在读取一个键后，服务器会更新键的最后一次使用时间，这个用于计算键的闲置时间，使用object idletime命令查看。</li>
+<li>若服务器读取一个过期键，服务器会先删除这个过期键然后再执行余下操作。</li>
+<li>若修改了被客户端watch的被监视键，则该键会被标记为脏键并让实物程序注意到。</li>
+<li>服务器修改一个键后，都会对脏键计数器+1，计数器会触发服务器的持久化以及复制操作。</li>
+<li>若服务器开启了数据库的通知功能，那么对键修改之后服务器将按配置发送相应的数据库通知。</li>
+</ul>
+<h2 id="修改生存时间或过期时间"><a href="#修改生存时间或过期时间" class="headerlink" title="修改生存时间或过期时间"></a>修改生存时间或过期时间</h2><p>通过expire或pexpire命令，客户端可以以秒或者毫秒精度为数据库中的某个键设置生存时间（Time To Live,TTL)，在经过指定的秒数或者毫秒之后，服务器就会自动删除生存时间为0的键。setex命令原理和expire原理相同。</p>
+<pre><code>expire &lt;key&gt; &lt;ttl&gt;  //用于将key的生存周期设置为ttl秒
+pexpire &lt;key&gt; &lt;ttl&gt;  //用于将key的生存周期设置 为ttl毫秒
+expireat &lt;key&gt; &lt;timestamp&gt;  //设置为timestamp指定秒数时间戳
+pexpireat &lt;key&gt; &lt;timestamp&gt;  //设置为timestamp指定毫秒数时间戳
+</code></pre><p>以上命令都是采用pexpireat命令来实现</p>
+<pre><code>persist &lt;key&gt; //解除key的过期时间
+</code></pre><h2 id="过期删除策略"><a href="#过期删除策略" class="headerlink" title="过期删除策略"></a>过期删除策略</h2><ol>
+<li>定时删除  用定时器删除，实时性高，效率低</li>
+<li>惰性删除  操作键时才检查是否过期并进行过期删除（被动删除），效率高但是会造成内存积压</li>
+<li>定期删除  程序定期对数据库进行一次检查，折中手段，需要根据应用场景做对应配置</li>
+</ol>
+<ul>
+<li>生成RDB文件时，过期键不会生效。</li>
+<li>载入RDB文件时，若以主服务器模式运行，则过期键不会生效；若以服务器模式运行，则会载入，并在和主服务器同步之后被清空。</li>
+<li>AOF文件写入时，过期数据会被正常写入，并在过期数据被删除后，程序会向AOF文件追加删除命令。</li>
+<li>AOF重写和生成RDB文件类似。</li>
+<li>当服务器以复制模式运行，从服务器的过期键删除动作由主服务器控制。主服务器在删除一个过期键后，会显式的向所有从服务器发送删除命令。</li>
+<li>从服务器在执行客户端发送的读命令时，即使碰到过期键也不会删除，而是继续像处理未过期的键一样处理过期键。从服务器只有接收到主服务器的删除命令才会删除过期键。</li>
+<li>通过主服务器来控制从服务器统一地删除过期键，可以保证服务器数据的主从一致性。</li>
+</ul>
+<h2 id="数据库通知"><a href="#数据库通知" class="headerlink" title="数据库通知"></a>数据库通知</h2>
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢给糖果哦<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="http://zjko-blog-img.oss-cn-beijing.aliyuncs.com/alipay.png?x-oss-process=style/root-img">
+                      <span class="reward-type">支付宝</span>
+                    </div>
+                    
+                    
+                    <div class="reward-box-item">
+                      <img class="reward-img" src="http://zjko-blog-img.oss-cn-beijing.aliyuncs.com/wepay.png?x-oss-process=style/root-img">
+                      <span class="reward-type">微信</span>
+                    </div>
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
@@ -180,83 +252,139 @@
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">经验</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Redis</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">学弟学妹看这里</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">IDE</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">读书笔记</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://zjko.vip/2019/02/21/redis源码分析-数据库/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/09/25/基于配置与MVC模式的Calc/" class="archive-article-date">
-  	<time datetime="2017-09-25T08:14:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-09-25</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2019/02/20/redis源码分析-对象篇/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Redis源码分析-对象篇</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/09/25/基于配置与MVC模式的Calc/">基于配置与MVC模式的Calc开发</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">Java</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">设计模式</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">构建技巧</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#redisServer"><span class="toc-number">1.</span> <span class="toc-text">redisServer</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redisClient"><span class="toc-number">2.</span> <span class="toc-text">redisClient</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redisDb"><span class="toc-number">3.</span> <span class="toc-text">redisDb</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#键的增删改查"><span class="toc-number">4.</span> <span class="toc-text">键的增删改查</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#读写键空间的维护操作"><span class="toc-number">5.</span> <span class="toc-text">读写键空间的维护操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#修改生存时间或过期时间"><span class="toc-number">6.</span> <span class="toc-text">修改生存时间或过期时间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#过期删除策略"><span class="toc-number">7.</span> <span class="toc-text">过期删除策略</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#数据库通知"><span class="toc-number">8.</span> <span class="toc-text">数据库通知</span></a></li></ol>
+                    </div>
+                </span>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
+        
+    </div>
+</aside>
+
+
+
   
   
-    </div></section>
   
 
-    
+  
+  <div id="SOHUCS" sid="redis源码分析-数据库"></div> 
+<script charset="utf-8" type="text/javascript" src="//changyan.sohu.com/upload/changyan.js"></script>
+<script type="text/javascript">
+    window.changyan.api.config({
+        appid: "cytdg7U6R",
+        conf: "7d3a014ec69825a84eddad4b78416c67"
+    });
+</script>
+
+  
+
+  
+
+  
 
 
           </div>
@@ -279,9 +407,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
+		isPost: true,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,

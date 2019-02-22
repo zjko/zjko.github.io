@@ -6,12 +6,12 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://zjko.vip">
-  <title>redis源码分析-对象篇 | ZJKo</title>
+  <title>Redis源码分析-对象篇 | ZJKo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="《Redis设计与实现》读书笔记，推荐去看作者原著 类型与编码123456789typedef struct redisObject &amp;#123;    // 类型    unsigned type:4;    // 编码    unsigned encoding:4;    // 指向底层实现数据结构的指针    void *ptr;    // ...&amp;#125; robj;">
-<meta name="keywords" content="算法,C,redis,读书笔记">
+<meta name="keywords" content="算法,C,Redis,读书笔记">
 <meta property="og:type" content="article">
-<meta property="og:title" content="redis源码分析-对象篇">
+<meta property="og:title" content="Redis源码分析-对象篇">
 <meta property="og:url" content="http://zjko.vip/2019/02/20/redis源码分析-对象篇/index.html">
 <meta property="og:site_name" content="ZJKo">
 <meta property="og:description" content="《Redis设计与实现》读书笔记，推荐去看作者原著 类型与编码123456789typedef struct redisObject &amp;#123;    // 类型    unsigned type:4;    // 编码    unsigned encoding:4;    // 指向底层实现数据结构的指针    void *ptr;    // ...&amp;#125; robj;">
@@ -30,9 +30,9 @@
 <meta property="og:image" content="http://redisbook.com/_images/graphviz-8d7b7d0e78ad9d445ff14834e9e9618234395d46.png">
 <meta property="og:image" content="http://redisbook.com/_images/graphviz-122e7ebdcd23e888fae17c21813be048c2d3f0a8.png">
 <meta property="og:image" content="http://redisbook.com/_images/graphviz-75ee561bcc63f8ea960d0339768aec97b1f570f0.png">
-<meta property="og:updated_time" content="2019-02-20T15:11:51.977Z">
+<meta property="og:updated_time" content="2019-02-21T13:39:09.181Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="redis源码分析-对象篇">
+<meta name="twitter:title" content="Redis源码分析-对象篇">
 <meta name="twitter:description" content="《Redis设计与实现》读书笔记，推荐去看作者原著 类型与编码123456789typedef struct redisObject &amp;#123;    // 类型    unsigned type:4;    // 编码    unsigned encoding:4;    // 指向底层实现数据结构的指针    void *ptr;    // ...&amp;#125; robj;">
 <meta name="twitter:image" content="http://redisbook.com/_images/graphviz-c0ba08ec03934562687cc3cb79580e76edef81e3.png">
   
@@ -165,7 +165,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      redis源码分析-对象篇
+      Redis源码分析-对象篇
     </h1>
   
 
@@ -564,7 +564,49 @@
 </tr>
 </tbody>
 </table>
-<h2 id="类型检查与命令多态"><a href="#类型检查与命令多态" class="headerlink" title="类型检查与命令多态"></a>类型检查与命令多态</h2><h2 id="内存回收"><a href="#内存回收" class="headerlink" title="内存回收"></a>内存回收</h2><h2 id="对象共享"><a href="#对象共享" class="headerlink" title="对象共享"></a>对象共享</h2><h2 id="对象的空转时长"><a href="#对象的空转时长" class="headerlink" title="对象的空转时长"></a>对象的空转时长</h2><h2 id="重点回顾"><a href="#重点回顾" class="headerlink" title="重点回顾"></a>重点回顾</h2>
+<h2 id="类型检查与命令多态"><a href="#类型检查与命令多态" class="headerlink" title="类型检查与命令多态"></a>类型检查与命令多态</h2><p>redis命令分为如下两类</p>
+<ul>
+<li>可以对所有类型的键执行，如DEL、EXPIRE、RENAME、TYPE、OBJECT。</li>
+<li>只能对特定类型的键执行，如：<br>SET 、 GET 、 APPEND 、 STRLEN 等命令只能对字符串键执行；<br>HDEL 、 HSET 、 HGET 、 HLEN 等命令只能对哈希键执行；<br>RPUSH 、 LPOP 、 LINSERT 、 LLEN 等命令只能对列表键执行；<br>SADD 、 SPOP 、 SINTER 、 SCARD 等命令只能对集合键执行；<br>ZADD 、 ZCARD 、 ZRANK 、 ZSCORE 等命令只能对有序集合键执行；</li>
+</ul>
+<p>在执行特定命令之前，Redis会先进行键类型检查，并根据对象编码方式选择对应的执行方法（命令多态）。</p>
+<h2 id="内存回收"><a href="#内存回收" class="headerlink" title="内存回收"></a>内存回收</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">redisObject</span> &#123;</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="comment">// 引用计数</span></span><br><span class="line">    <span class="keyword">int</span> refcount;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125; robj;</span><br></pre></td></tr></table></figure>
+<p>redis通过对象引用计数方式进行对象的内存回收。</p>
+<h3 id="引用计数API"><a href="#引用计数API" class="headerlink" title="引用计数API"></a>引用计数API</h3><p>通过 object refcount [key] 查看对应键的引用次数</p>
+<table>
+<thead>
+<tr>
+<th>函数</th>
+<th>作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>incrRefCount</td>
+<td>将对象的引用计数值增一。</td>
+</tr>
+<tr>
+<td>decrRefCount</td>
+<td>将对象的引用计数值减一， 当对象的引用计数值等于 0 时， 释放对象。</td>
+</tr>
+<tr>
+<td>resetRefCount</td>
+<td>将对象的引用计数值设置为 0 ， 但并不释放对象， 这个函数通常在需要重新设置对象的引用计数值时使用。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="对象共享"><a href="#对象共享" class="headerlink" title="对象共享"></a>对象共享</h2><p>redis使用引用计数进行对象共享。<br>当Redis初始化时会创建10000个字符串对象，即0~9999内的字符串对象都可以共享。<br>对象在进行共享的时候需要进行验证，共享的两者是否完全相同，为了更高的性能共享的对象一般都是一些简单的对象。</p>
+<h2 id="对象的空转时长"><a href="#对象的空转时长" class="headerlink" title="对象的空转时长"></a>对象的空转时长</h2><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">redisObject</span> &#123;</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">    <span class="keyword">unsigned</span> lru:<span class="number">22</span>;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125; robj;</span><br></pre></td></tr></table></figure>
+<p>除了通过OBJECT IDLETIME [key] 打印出来空转时长，还可以通过maxmemory配置内存最高上限时长，从而会将最高的超出部分优先释放掉。</p>
+<h2 id="主要内容"><a href="#主要内容" class="headerlink" title="主要内容"></a>主要内容</h2><ul>
+<li>Redis 数据库中的每个键值对的键和值都是一个对象。</li>
+<li>Redis 共有字符串、列表、哈希、集合、有序集合五种类型的对象， 每种类型的对象至少都有两种或以上的编码方式， 不同的编码可以在不同的使用场景上优化对象的使用效率。</li>
+<li>服务器在执行某些命令之前， 会先检查给定键的类型能否执行指定的命令， 而检查一个键的类型就是检查键的值对象的类型。</li>
+<li>Redis 的对象系统带有引用计数实现的内存回收机制， 当一个对象不再被使用时， 该对象所占用的内存就会被自动释放。</li>
+<li>Redis 会共享值为 0 到 9999 的字符串对象。</li>
+<li>对象会记录自己的最后一次被访问的时间， 这个时间可以用于计算对象的空转时间。</li>
+</ul>
+
       
 
       
@@ -616,7 +658,7 @@
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">redis</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">Redis</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
@@ -690,6 +732,15 @@
   
 <nav id="article-nav">
   
+    <a href="/2019/02/21/redis源码分析-数据库/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          Redis源码分析-数据库
+        
+      </div>
+    </a>
+  
   
     <a href="/2019/02/19/redis源码分析-数据结构篇/" id="article-nav-older" class="article-nav-link-wrap">
       <div class="article-nav-title">Redis设计与实现-数据结构篇</div>
@@ -719,7 +770,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#类型与编码"><span class="toc-number">1.</span> <span class="toc-text">类型与编码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#字符串对象"><span class="toc-number">2.</span> <span class="toc-text">字符串对象</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#命令"><span class="toc-number">2.1.</span> <span class="toc-text">命令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#列表对象"><span class="toc-number">3.</span> <span class="toc-text">列表对象</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#命令-1"><span class="toc-number">3.1.</span> <span class="toc-text">命令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#哈希对象"><span class="toc-number">4.</span> <span class="toc-text">哈希对象</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#命令-2"><span class="toc-number">4.1.</span> <span class="toc-text">命令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#集合对象"><span class="toc-number">5.</span> <span class="toc-text">集合对象</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#命令-3"><span class="toc-number">5.1.</span> <span class="toc-text">命令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#有序集合对象"><span class="toc-number">6.</span> <span class="toc-text">有序集合对象</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#命令-4"><span class="toc-number">6.1.</span> <span class="toc-text">命令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类型检查与命令多态"><span class="toc-number">7.</span> <span class="toc-text">类型检查与命令多态</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内存回收"><span class="toc-number">8.</span> <span class="toc-text">内存回收</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#对象共享"><span class="toc-number">9.</span> <span class="toc-text">对象共享</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#对象的空转时长"><span class="toc-number">10.</span> <span class="toc-text">对象的空转时长</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#重点回顾"><span class="toc-number">11.</span> <span class="toc-text">重点回顾</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#类型与编码"><span class="toc-number">1.</span> <span class="toc-text">类型与编码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#字符串对象"><span class="toc-number">2.</span> <span class="toc-text">字符串对象</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#命令"><span class="toc-number">2.1.</span> <span class="toc-text">命令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#列表对象"><span class="toc-number">3.</span> <span class="toc-text">列表对象</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#命令-1"><span class="toc-number">3.1.</span> <span class="toc-text">命令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#哈希对象"><span class="toc-number">4.</span> <span class="toc-text">哈希对象</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#命令-2"><span class="toc-number">4.1.</span> <span class="toc-text">命令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#集合对象"><span class="toc-number">5.</span> <span class="toc-text">集合对象</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#命令-3"><span class="toc-number">5.1.</span> <span class="toc-text">命令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#有序集合对象"><span class="toc-number">6.</span> <span class="toc-text">有序集合对象</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#命令-4"><span class="toc-number">6.1.</span> <span class="toc-text">命令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#类型检查与命令多态"><span class="toc-number">7.</span> <span class="toc-text">类型检查与命令多态</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#内存回收"><span class="toc-number">8.</span> <span class="toc-text">内存回收</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#引用计数API"><span class="toc-number">8.1.</span> <span class="toc-text">引用计数API</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#对象共享"><span class="toc-number">9.</span> <span class="toc-text">对象共享</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#对象的空转时长"><span class="toc-number">10.</span> <span class="toc-text">对象的空转时长</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#主要内容"><span class="toc-number">11.</span> <span class="toc-text">主要内容</span></a></li></ol>
                     </div>
                 </span>
             </div>
@@ -833,6 +884,46 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">C</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">AR</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Unity</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">MMD</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Android</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">跨平台</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">数据库</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">C#</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">原创软件</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">嵌入式</a>
               </li>
              
@@ -841,11 +932,27 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">算法</a>
+                <a href="javascript:void(0)" class="js-tag color1">Redis</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">C</a>
+                <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">经验</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Linux</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Windows</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">游戏开发</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -869,54 +976,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">AR</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Unity</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">MMD</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">游戏开发</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">C#</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">原创软件</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">数据库</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">redis</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">经验</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Android</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">跨平台</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">学弟学妹看这里</a>
               </li>
              
@@ -926,14 +985,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">云服务</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Linux</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Windows</a>
               </li>
             
             <div class="clearfix"></div>
