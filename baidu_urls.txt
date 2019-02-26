@@ -15,7 +15,6 @@ http://zjko.vip/2017/12/22/神奇的6174/
 http://zjko.vip/2017/12/22/大数的阶乘（大数计算）/
 http://zjko.vip/2017/12/06/DBTest开发手册/
 http://zjko.vip/2017/12/06/C语言操作数据库-ODBC/
-http://zjko.vip/2017/10/11/简述游戏开发/
 http://zjko.vip/2017/09/29/不用装虚拟机了，Win10自带了Linux！/
 http://zjko.vip/2017/09/29/用阿里云OSS搭建自己的图床/
 http://zjko.vip/2017/09/27/安卓手机搭建开发环境/

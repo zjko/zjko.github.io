@@ -35,6 +35,17 @@
 
   
 
+
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?b2cbe6e121a404b8a583501adadc79ff";
+      var s = document.getElementsByTagName("script")[0]; 
+      s.parentNode.insertBefore(hm, s);
+    })();
+    </script>
+    
 </head>
 </html>
 <body>
@@ -179,11 +190,11 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">设计模式</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">GO</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">GO</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">设计模式</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
@@ -256,34 +267,9 @@
 <li>网络延迟</li>
 <li>…………</li>
 </ol>
-<h2 id="善用索引，避免全表扫描"><a href="#善用索引，避免全表扫描" class="headerlink" title="善用索引，避免全表扫描"></a>善用索引，避免全表扫描</h2><ul>
-<li>合理使用索引，避免在索引列做运算</li>
-<li>应考虑在 where 及 order by 涉及的列上建立索引。</li>
-<li>应尽量避免在 where 子句中对字段进行 null 值判断，否则将导致引擎放弃使用索引而进行全表扫描。</li>
-<li>应尽量避免在 where 子句中使用 != 或 &lt;&gt; 操作符，否则将引擎放弃使用索引而进行全表扫描。</li>
-<li>应尽量避免在 where 子句中使用 or 来连接条件，如果一个字段有索引，一个字段没有索引，将导致引擎放弃使用索引而进行全表扫描</li>
-<li>in 和 not in 也要慎用，否则会导致全表扫描</li>
-<li>如果在 where 子句中使用参数，也会导致全表扫描。因为SQL只有在运行时才会解析局部变量，但优化程序不能将访问计划的选择推迟到运行时；它必须在编译时进行选择。</li>
-<li>应尽量避免在where子句中对字段进行函数操作，这将导致引擎放弃使用索引而进行全表扫描。</li>
-<li>不要在 where 子句中的“=”左边进行函数、算术运算或其他表达式运算，否则系统将可能无法正确使用索引。</li>
-<li>在使用索引字段作为条件时，如果该索引是复合索引，那么必须使用到该索引中的第一个字段作为条件时才能保证系统使用该索引，否则该索引将不会被使用，并且应尽可能的让字段顺序与索引顺序相一致。</li>
-<li>避免<code>like &quot;%keyword%&quot;</code>,前置通配符会导致全表扫描，如有需要可以做全文索引。</li>
-</ul>
-<h2 id="避免数据库做多余的操作"><a href="#避免数据库做多余的操作" class="headerlink" title="避免数据库做多余的操作"></a>避免数据库做多余的操作</h2><ul>
-<li>计算相关在业务层做，数据库尽量避免多余操作</li>
-<li>避免使用 * ，所有需要的字段都要列出来，做update操作时也一样</li>
-<li>查询必须要限制数量</li>
-<li>不要写一些没有意义的查询，如需要生成一个空表结构</li>
-</ul>
-<h2 id="合理设计表结构"><a href="#合理设计表结构" class="headerlink" title="合理设计表结构"></a>合理设计表结构</h2><ul>
-<li>设计达到3NF</li>
-<li>必须将字段定义为NOT NULL并提供默认值</li>
-<li>避免单表字段过多，必要时进行纵向拆分（做关联表）</li>
-<li>数据量过大就要考虑做水平切割（分表）</li>
-<li>避免字段存储大数据块，例如图片</li>
-<li>统计量可以考虑提取出来</li>
-</ul>
-
+        
+          <a class="article-more-a" href="/2018/08/29/SQL性能优化建议/#more">more >></a>
+        
       
 
       
@@ -812,6 +798,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">C#</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">原创软件</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Docker</a>
               </li>
              
@@ -820,11 +814,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">C#</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">原创软件</a>
+                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -848,14 +838,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">Linux</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Windows</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">面试</a>
               </li>
              
@@ -868,23 +850,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">Linux</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">Windows</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">游戏开发</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+                <a href="javascript:void(0)" class="js-tag color3">GO</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">设计模式</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">构建技巧</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">GO</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -900,7 +882,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
+                <a href="javascript:void(0)" class="js-tag color5">Java</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">构建技巧</a>
               </li>
             
             <div class="clearfix"></div>
