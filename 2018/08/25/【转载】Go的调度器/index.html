@@ -6,20 +6,25 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="dns-prefetch" href="http://zjko.vip">
-  <title>最大连续子序列和-dp解法 | ZJKo</title>
+  <title>【转载】Go的调度器 | ZJKo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="求最大子序列的和是一道十分经典的算法问题，个人认为这个问题十分适合动态规划入门，因此在本篇文章里将详细的讲述如何使用动态规划的方案解决这个问题。 问题描述给定一个int型序列，计算其最大连续子序列。输入第一行包括一个k第二行输入k个数据 输出最大连续子序列的和 案例 输入： 8 -2 11 -4 13 -5 -2 -10  输出： 20 方案步骤1：简化问题，找出状态公式p[i]  表示第i个元素">
-<meta name="keywords" content="算法,Go">
+  <meta name="description" content="原文： http://morsmachine.dk/go-scheduler Go 1.1的一大特色是新调度程序，由Dmitry Vyukov提供。新的调度程序使并行Go程序的性能大幅提升。 为什么需要一个Go调度器操作系统提供了线程调度方式，为什么还需要一个go调度器？">
+<meta name="keywords" content="Go">
 <meta property="og:type" content="article">
-<meta property="og:title" content="最大连续子序列和-dp解法">
-<meta property="og:url" content="http://zjko.vip/2017/12/22/最大连续子序列和/index.html">
+<meta property="og:title" content="【转载】Go的调度器">
+<meta property="og:url" content="http://zjko.vip/2018/08/25/【转载】Go的调度器/index.html">
 <meta property="og:site_name" content="ZJKo">
-<meta property="og:description" content="求最大子序列的和是一道十分经典的算法问题，个人认为这个问题十分适合动态规划入门，因此在本篇文章里将详细的讲述如何使用动态规划的方案解决这个问题。 问题描述给定一个int型序列，计算其最大连续子序列。输入第一行包括一个k第二行输入k个数据 输出最大连续子序列的和 案例 输入： 8 -2 11 -4 13 -5 -2 -10  输出： 20 方案步骤1：简化问题，找出状态公式p[i]  表示第i个元素">
+<meta property="og:description" content="原文： http://morsmachine.dk/go-scheduler Go 1.1的一大特色是新调度程序，由Dmitry Vyukov提供。新的调度程序使并行Go程序的性能大幅提升。 为什么需要一个Go调度器操作系统提供了线程调度方式，为什么还需要一个go调度器？">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-03-01T12:18:45.942Z">
+<meta property="og:image" content="http://morsmachine.dk/our-cast.jpg">
+<meta property="og:image" content="http://morsmachine.dk/in-motion.jpg">
+<meta property="og:image" content="http://morsmachine.dk/syscall.jpg">
+<meta property="og:image" content="http://morsmachine.dk/steal.jpg">
+<meta property="og:updated_time" content="2019-03-04T09:38:50.988Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="最大连续子序列和-dp解法">
-<meta name="twitter:description" content="求最大子序列的和是一道十分经典的算法问题，个人认为这个问题十分适合动态规划入门，因此在本篇文章里将详细的讲述如何使用动态规划的方案解决这个问题。 问题描述给定一个int型序列，计算其最大连续子序列。输入第一行包括一个k第二行输入k个数据 输出最大连续子序列的和 案例 输入： 8 -2 11 -4 13 -5 -2 -10  输出： 20 方案步骤1：简化问题，找出状态公式p[i]  表示第i个元素">
+<meta name="twitter:title" content="【转载】Go的调度器">
+<meta name="twitter:description" content="原文： http://morsmachine.dk/go-scheduler Go 1.1的一大特色是新调度程序，由Dmitry Vyukov提供。新的调度程序使并行Go程序的性能大幅提升。 为什么需要一个Go调度器操作系统提供了线程调度方式，为什么还需要一个go调度器？">
+<meta name="twitter:image" content="http://morsmachine.dk/our-cast.jpg">
   
     <link rel="alternative" href="/atom.xml" title="ZJKo" type="application/atom+xml">
   
@@ -153,39 +158,62 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-最大连续子序列和" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-【转载】Go的调度器" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      最大连续子序列和-dp解法
+      【转载】Go的调度器
     </h1>
   
 
         
-        <a href="/2017/12/22/最大连续子序列和/" class="archive-article-date">
-  	<time datetime="2017-12-22T15:16:55.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-12-22</time>
+        <a href="/2018/08/25/【转载】Go的调度器/" class="archive-article-date">
+  	<time datetime="2018-08-25T12:33:41.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-08-25</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>求最大子序列的和是一道十分经典的算法问题，个人认为这个问题十分适合动态规划入门，因此在本篇文章里将详细的讲述如何使用动态规划的方案解决这个问题。</p>
-<h2 id="问题描述"><a href="#问题描述" class="headerlink" title="问题描述"></a>问题描述</h2><p>给定一个int型序列，计算其最大连续子序列。<br><strong>输入</strong><br>第一行包括一个k<br>第二行输入k个数据</p>
-<p><strong>输出</strong><br>最大连续子序列的和</p>
-<p><strong>案例</strong></p>
-<pre><code>输入：
-8
--2 11 -4 13 -5 -2 -10
-
-输出：
-20
-</code></pre><h2 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h2><p>步骤1：简化问题，找出状态公式<br>p[i]  表示第i个元素<br>dp[0] = max{0, p[0]}<br>dp[i] 表示0~i个元素的最大连续子串<br>dp[i] = max{p[i], dp[i-1]+p[i]}</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 计算dp[0]</span></span><br><span class="line"><span class="comment">// dp[0] = max&#123;0, p[0]&#125;</span></span><br><span class="line"><span class="keyword">if</span> p[<span class="number">0</span>] &gt; <span class="number">0</span> &#123;</span><br><span class="line">    dp[<span class="number">0</span>] = p[<span class="number">0</span>]</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    dp[<span class="number">0</span>] = <span class="number">0</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 先求出以第i个元素结尾的最大连续子串</span></span><br><span class="line"><span class="keyword">for</span> i := <span class="number">1</span>; i &lt; <span class="built_in">len</span>; i++ &#123;</span><br><span class="line">    <span class="comment">// dp[i] = max&#123;p[i], dp[i-1]+p[i]&#125;</span></span><br><span class="line">    <span class="keyword">if</span> p[i] &gt; dp[i<span class="number">-1</span>]+p[i] &#123;</span><br><span class="line">        dp[i] = p[i]</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        dp[i] = dp[i<span class="number">-1</span>] + p[i]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 找出dp中最大的那个数字，则是整个串的最大连续子串</span></span><br><span class="line">k := dp[<span class="number">0</span>]</span><br><span class="line"><span class="keyword">for</span> i := <span class="number">1</span>; i &lt; <span class="built_in">len</span>; i++ &#123;</span><br><span class="line">    <span class="keyword">if</span> dp[i] &gt; k &#123;</span><br><span class="line">        k = dp[i]</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="简化"><a href="#简化" class="headerlink" title="简化"></a>简化</h2><p>通过查看代码，我们发现无需记录每一个阶段的最大值，而只需要记住上一次和这一次当中最大的数就行了，因此可以省略掉dp[]从而用一个变量pervMax来表示上一个阶段的最大连续子串。<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">pervMax := <span class="number">0</span></span><br><span class="line">max := <span class="number">0</span></span><br><span class="line"><span class="keyword">if</span> p[<span class="number">0</span>] &gt; <span class="number">0</span> &#123;</span><br><span class="line">    pervMax = p[<span class="number">0</span>]</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 先求出以i结尾的最大连续子串</span></span><br><span class="line"><span class="keyword">for</span> i := <span class="number">1</span>; i &lt; <span class="built_in">len</span>; i++ &#123;</span><br><span class="line">    <span class="keyword">if</span> p[i] &gt; pervMax+p[i] &#123;</span><br><span class="line">        pervMax = p[i]</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        pervMax = pervMax + p[i]</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> pervMax &gt; max &#123;</span><br><span class="line">        max = pervMax</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// fmt.Printf("%d ", pervMax)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+        <p>原文： <a href="http://morsmachine.dk/go-scheduler" target="_blank" rel="noopener">http://morsmachine.dk/go-scheduler</a></p>
+<p>Go 1.1的一大特色是新调度程序，由Dmitry Vyukov提供。新的调度程序使并行Go程序的性能大幅提升。</p>
+<h3 id="为什么需要一个Go调度器"><a href="#为什么需要一个Go调度器" class="headerlink" title="为什么需要一个Go调度器"></a>为什么需要一个Go调度器</h3><p>操作系统提供了线程调度方式，为什么还需要一个go调度器？<br><a id="more"></a></p>
+<ul>
+<li><p>POSIX线程API是对已有的UNIX进程模型的逻辑扩展，因此，线程和进程有很多类似的地方，如线程有自己的信号掩码，可以分配CPU亲和力，可以放入cgroups，但是有很多特性对于Go程序来说都是累赘。</p>
+</li>
+<li><p>另一个问题是OS无法根据Go模型做出明智的调度决策。例如，Go垃圾收集器要求在运行时停止所有线程，并且该内存必须处于一致状态。垃圾回收时间点是无法确定的，如果让OS来调度则会导致大量线程停止工作。</p>
+</li>
+<li><p>当你在随机点安排了很多线程时，你可能不得不等待很多线程达到一致状态。Go调度程序可以决定仅在知道内存一致的点上进行调度。这意味着当我们停止垃圾收集时，我们只需要等待在CPU核心上主动运行的线程。</p>
+</li>
+</ul>
+<h3 id="Go调度器的工作"><a href="#Go调度器的工作" class="headerlink" title="Go调度器的工作"></a>Go调度器的工作</h3><p>有三种常用的线程模型。</p>
+<ol>
+<li>N：1，其中一个用户空间线程在一个OS线程上运行。这具有快速上下文切换但不能利用多核系统的优点。</li>
+<li>1:1模型，1个内核空间线程运行一个用户空间线程。这种充分利用了多核系统的优势但是上下文切换非常慢，因为每一次调度都会在用户态和内核态之间切换。</li>
+<li>M:N模型， 每个用户线程对应多个内核空间线程，同时也可以一个内核空间线程对应多个用户空间线程。Go打算采用这种模型，使用任意个内核模型管理任意个goroutine。这样结合了以上两种模型的优点，但缺点就是调度的复杂性。</li>
+</ol>
+<p>Go试图通过M：N的调度器去获取这两个世界的全部优势。它在任意数目的OS线程上调用任意数目的goroutines。你可以快速进行上下文切换，并且还能利用你系统上所有的核心的优势。这个模型主要的缺点是它增加了调度器的复杂性。<br><img src="http://morsmachine.dk/our-cast.jpg" alt="图示"></p>
+<ul>
+<li><strong>M表示OS线程</strong>，它是由OS管理的可执行程序的一个线程，而且工作起来特别像你的标准POSIX线程。在运行时代码里，它被成为M，即机器（machine）。</li>
+<li><strong>G表示goroutine</strong>，它包括栈、指令指针以及对于调用goroutines很重要的其它信息，比如阻塞它的任何channel。在可执行代码里，它被称为G。</li>
+<li><strong>P小时调用的上下文</strong>，你可以把它看作在一个单线程上运行代码的调度器的一个本地化版本。它是让我们从N：1调度器转到M：N调度器的重要部分。在运行时代码里，它被叫做P，即处理器（processor）。</li>
+</ul>
+<p><img src="http://morsmachine.dk/in-motion.jpg" alt="图示"></p>
+<p>可以从上面的图里看到两个线程（M），每个线程都拥有一个上下文（P），每个线程都正在运行一个goroutine（G）。为了运行goroutines，一个线程必须拥有一个上下文。</p>
+<p>上下文的数目在启动时被设置为环境变量GOMAXPROCS的值或者通过运行时函数GOMAXPROCS()来设置。通常，在你的程序执行时它不会发生变化。上下文的数目被固定的意思是，只有GOMAXPROCS个上下文正在任意点上运行Go代码。我们可以使用GOMAXPROCS调整Go进程的调用使其适合于一个单独的计算机，比如一个4核的PC中可以在4个线程上运行Go代码。</p>
+<p><code>外部的灰色goroutines没在运行，但是已经准备好被调度了。它们被安排成一个叫做runqueue的列表。当一个goroutine执行一个go 语句的时候，goroutine就被添加到runqueue的末端。一旦一个上下文已经运行一个goroutine到了一个点上，它就会把一个goroutine从它的runqueue给pop出来，设置栈和指令指针并且开始运行这个goroutine。</code></p>
+<p>为了降低mutex竞争，每一个上下文都有它自己的runqueue。Go调度器曾经的一个版本只有一个通过mutex来保护的全局runqueue，线程们经常被阻塞来等待mutex被解除阻塞。当你有许多32核的机器而且想尽可能地压榨它们的性能时，情况就会变得相当坏。</p>
+<p>只要所有的上下文都有goroutines要运行，调度器就能在一个稳定的状态下保持调度。但是有几个你能改变的场景。</p>
+<h2 id="你打算（系统）调用谁？"><a href="#你打算（系统）调用谁？" class="headerlink" title="你打算（系统）调用谁？"></a>你打算（系统）调用谁？</h2><p>你现在可能想知道，为什么一定要有上下文？我们能不能丢掉上下文而仅仅把runqueue放到线程上？不尽然。<code>我们用上下文的原因是如果正在运行的线程因为某种原因需要阻塞的时候，我们可以把这些上下文移交给其它线程</code></p>
+<p>我们需要阻塞的一个例子是，当我们需要调用一个系统调用的时候。因为一个线程不能既执行代码同时又阻塞到一个系统调用上，我们需要移交对应于这个线程的上下文以让这个上下文保持调度。<br><img src="http://morsmachine.dk/syscall.jpg" alt="图示"></p>
+<p>从上图我们能够看出，一个线程放弃了它的上下文以让另外的线程可以运行它。调度器确保有足够的线程来运行所有的上下文。上图中的M1 可能仅仅为了让它处理图中的系统调用而被创建出来，或者它可能来自一个线程池（thread cache）。这个处于系统调用中的线程将会保持在这个导致系统调用的goroutine上，因为从技术上来说，它仍然在执行，虽然阻塞在OS里了。</p>
+<p>当这个系统调用返回的时候，这个线程必须尝试获取一个上下文来运行这个返回的goroutine，操作的正常模式是从其它所有线程中的其中一个线程中“偷”一个上下文。如果“偷盗”不成功，它就会把它的goroutine放到一个全局runqueue中，然后把自己放到线程池中或者转入睡眠状态。</p>
+<p>这个全局runqueue是各个上下文在运行完自己的本地runqueue后用来获取新goroutine的地方。上下文也会周期性的检查这个全局runqueue上的goroutine，否则，全局runqueue上的goroutines可能得不到执行而饿死。</p>
+<p><code>Go程序要在多线程上运行的原因就是因为要处理系统调用，哪怕GOMAXPROCS等于1</code>。运行时(runtime)使用调用系统调用的goroutines，而不是线程。</p>
+<h2 id="盗取工作（Stealing-work）"><a href="#盗取工作（Stealing-work）" class="headerlink" title="盗取工作（Stealing work）"></a>盗取工作（Stealing work）</h2><p>系统的稳定状态改变的另外一个方法是，当一个上下文运行完要被调度的所有goroutines的时候。如果各个上下文的runqueue里的工作的数目不均衡，改变就会发生了，否则会导致一个上下文在执行完它的runqueue后就会结束，尽管系统中仍然有许多工作要执行。所以为了保持运行Go代码，一个上下文能够从全局runqueue中获取goroutines，但是如果全局runqueue中也没有goroutines了，那么上下文就不得不从其它地方获取goroutines了。<br><img src="http://morsmachine.dk/steal.jpg" alt><br>这个“其它地方”指的是其它上下文！当一个上下文完成自己的任务后，它就会尝试“盗取”另一个上下文runqueue中工作量的一半。这将确保每个上下文总是有活干，然后反过来确保所有线程尽可能处于最大负荷。<br>如图所示两个上下文分别执行4个goroutines和0个goroutines，此时执行0个goroutines的上下文将会从执行4个goroutines上下文的runqueue拿到两个goroutines。</p>
 
       
 
@@ -229,10 +257,6 @@
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">算法</a>
-        		</li>
-      		 
         		<li class="article-tag-list-item">
         			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">Go</a>
         		</li>
@@ -290,7 +314,7 @@
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://zjko.vip/2017/12/22/最大连续子序列和/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://zjko.vip/2018/08/25/【转载】Go的调度器/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -304,18 +328,18 @@
   
 <nav id="article-nav">
   
-    <a href="/2017/12/26/震惊！少年苦练魔法竟然/" id="article-nav-newer" class="article-nav-link-wrap">
+    <a href="/2018/08/29/SQL性能优化建议/" id="article-nav-newer" class="article-nav-link-wrap">
       <i class="icon-circle-left"></i>
       <div class="article-nav-title">
         
-          震惊！少年苦练魔法竟然
+          SQL性能优化建议
         
       </div>
     </a>
   
   
-    <a href="/2017/12/22/24点游戏/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">24点游戏</div>
+    <a href="/2018/08/25/Nginx和Apache的区别/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">Nginx和Apache的区别</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -342,8 +366,8 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#问题描述"><span class="toc-number">1.</span> <span class="toc-text">问题描述</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#方案"><span class="toc-number">2.</span> <span class="toc-text">方案</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#简化"><span class="toc-number">3.</span> <span class="toc-text">简化</span></a></li></ol>
-                    </div>
+                    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#为什么需要一个Go调度器"><span class="toc-number">1.</span> <span class="toc-text">为什么需要一个Go调度器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Go调度器的工作"><span class="toc-number">2.</span> <span class="toc-text">Go调度器的工作</span></a></li></ol><li class="toc-item toc-level-2"><a class="toc-link" href="#你打算（系统）调用谁？"><span class="toc-number"></span> <span class="toc-text">你打算（系统）调用谁？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#盗取工作（Stealing-work）"><span class="toc-number"></span> <span class="toc-text">盗取工作（Stealing work）</span></a>
+                    </li></div>
                 </span>
             </div>
         </div>
@@ -358,7 +382,7 @@
   
 
   
-  <div id="SOHUCS" sid="最大连续子序列和"></div> 
+  <div id="SOHUCS" sid="【转载】Go的调度器"></div> 
 <script charset="utf-8" type="text/javascript" src="//changyan.sohu.com/upload/changyan.js"></script>
 <script type="text/javascript">
     window.changyan.api.config({
