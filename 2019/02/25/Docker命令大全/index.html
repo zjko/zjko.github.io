@@ -16,7 +16,7 @@
 <meta property="og:site_name" content="ZJKo">
 <meta property="og:description" content="容器生命周期管理 run start/stop/restart kill rm pause/unpause create exec">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2019-02-25T11:06:58.250Z">
+<meta property="og:updated_time" content="2019-03-06T10:49:08.326Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Docker命令大全">
 <meta name="twitter:description" content="容器生命周期管理 run start/stop/restart kill rm pause/unpause create exec">
@@ -218,6 +218,9 @@
 <li>info</li>
 <li>version</li>
 </ul>
+<h2 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h2><ul>
+<li><code># docker run -it -v 宿主机目录:容器目录 容器 /bin/bash</code> </li>
+</ul>
 
       
 
@@ -374,7 +377,7 @@
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#容器生命周期管理"><span class="toc-number">1.</span> <span class="toc-text">容器生命周期管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#容器操作"><span class="toc-number">2.</span> <span class="toc-text">容器操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#容器rootfs命令"><span class="toc-number">3.</span> <span class="toc-text">容器rootfs命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#镜像仓库"><span class="toc-number">4.</span> <span class="toc-text">镜像仓库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#本地镜像管理"><span class="toc-number">5.</span> <span class="toc-text">本地镜像管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他"><span class="toc-number">6.</span> <span class="toc-text">其他</span></a></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#容器生命周期管理"><span class="toc-number">1.</span> <span class="toc-text">容器生命周期管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#容器操作"><span class="toc-number">2.</span> <span class="toc-text">容器操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#容器rootfs命令"><span class="toc-number">3.</span> <span class="toc-text">容器rootfs命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#镜像仓库"><span class="toc-number">4.</span> <span class="toc-text">镜像仓库</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#本地镜像管理"><span class="toc-number">5.</span> <span class="toc-text">本地镜像管理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他"><span class="toc-number">6.</span> <span class="toc-text">其他</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#常用命令"><span class="toc-number">7.</span> <span class="toc-text">常用命令</span></a></li></ol>
                     </div>
                 </span>
             </div>
@@ -496,18 +499,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">数据库</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">C#</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">原创软件</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">AR</a>
               </li>
              
@@ -528,6 +519,18 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">数据库</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">C#</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">原创软件</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Docker</a>
               </li>
              
@@ -540,10 +543,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">嵌入式</a>
               </li>
              
@@ -552,15 +551,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">SQL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Redis</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">读书笔记</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">Go</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -576,15 +575,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">音乐</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">Linux</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">Windows</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">音乐</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -604,7 +603,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">IDE</a>
+                <a href="javascript:void(0)" class="js-tag color3">Go</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">模拟</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -612,7 +615,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">模拟</a>
+                <a href="javascript:void(0)" class="js-tag color4">IDE</a>
               </li>
             
             <div class="clearfix"></div>
